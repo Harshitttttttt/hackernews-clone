@@ -1,11 +1,20 @@
 import type { Response, Request, NextFunction, RequestHandler } from "express";
 import asyncHandler from "express-async-handler";
-import { RegisterUserSchema, LoginUserSchema } from "../schemas/auth.schema.ts";
+import {
+  RegisterUserSchema,
+  LoginUserSchema,
+} from "../zod/schemas/auth.schema.ts";
 import { db } from "../db/db.ts";
 import { usersTable } from "../db/schema.ts";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.ts";
+
+import {
+  checkIfUserExists,
+  createUser,
+  getUserByEmail,
+} from "../db/queries/userQueries.ts";
 
 // @desc Register a user
 // @route POST /api/users/register
@@ -13,13 +22,16 @@ import generateToken from "../utils/generateToken.ts";
 
 const registerUser: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    console.log("Hitting registerUser endpoint");
     try {
       const validated = RegisterUserSchema.parse(req.body);
       const { username, email, password } = validated;
 
-      const userAlreadyExists = await db.query.usersTable.findFirst({
-        where: (u, { eq }) => eq(u.email, email),
-      });
+      // const userAlreadyExists = await db.query.usersTable.findFirst({
+      //   where: (u, { eq }) => eq(u.email, email),
+      // });
+
+      const userAlreadyExists = await checkIfUserExists(email);
 
       if (userAlreadyExists) {
         return res.status(409).json({
@@ -30,10 +42,18 @@ const registerUser: RequestHandler = asyncHandler(
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const [user] = await db
-        .insert(usersTable)
-        .values({ username, email, password: hashedPassword })
-        .returning();
+      // const [user] = await db
+      //   .insert(usersTable)
+      //   .values({ username, email, password: hashedPassword })
+      //   .returning();
+
+      const userData = {
+        username: username,
+        email: email,
+        password: hashedPassword,
+      };
+
+      const [user] = await createUser(userData);
 
       if (user) {
         generateToken(res, user.id);
@@ -68,16 +88,21 @@ const loginUser: RequestHandler = asyncHandler(
       const validated = LoginUserSchema.parse(req.body);
       const { email, password } = validated;
 
-      const findUser = await db.query.usersTable.findFirst({
-        where: (u, { eq }) => eq(u.email, email),
-      });
+      // const findUser = await db.query.usersTable.findFirst({
+      //   where: (u, { eq }) => eq(u.email, email),
+      // });
+
+      const findUser = await getUserByEmail(email);
 
       if (findUser && (await bcrypt.compare(password, findUser.password))) {
         generateToken(res, findUser.id);
         res.status(201).json({
-          id: findUser.id,
-          username: findUser.username,
-          email: findUser.email,
+          message: "User Logged In Successfully",
+          user: {
+            id: findUser.id,
+            username: findUser.username,
+            email: findUser.email,
+          },
         });
       } else {
         res.status(401);
@@ -121,6 +146,8 @@ const getUserProfile: RequestHandler = asyncHandler(
         message: "Not Authenticated",
       });
     }
+
+    console.log("req.user: ", req.user);
 
     const { id, username, email } = req.user;
 

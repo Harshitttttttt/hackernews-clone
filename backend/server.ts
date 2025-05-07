@@ -3,6 +3,7 @@ const port = process.env.PORT || 3000;
 import cookieParser from "cookie-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.ts";
 import userRoutes from "./routes/userRoutes.ts";
+import postRoutes from "./routes/postRoutes.ts";
 import { drizzle } from "drizzle-orm/neon-http";
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/users", userRoutes);
+app.use("/api/posts", postRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running");
