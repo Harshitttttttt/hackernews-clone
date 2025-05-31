@@ -48,6 +48,7 @@ export const postsTable = pgTable(
     user_id: uuid("user_id")
       .references(() => usersTable.id)
       .notNull(),
+    creator_username: varchar({ length: 255 }).notNull(),
     score: bigint("score", { mode: "number" }).default(0).notNull(),
     comment_count: bigint("comment_count", { mode: "number" })
       .default(0)
@@ -121,7 +122,8 @@ export const postVotesTable = pgTable(
     post_id: uuid("post_id")
       .references(() => postsTable.id)
       .notNull(),
-    direction: integer("direction").notNull(), // +1 or -1
+    // direction: integer("direction").notNull(),
+    isUpvote: boolean("isUpvote").notNull().default(false),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => {
@@ -147,7 +149,8 @@ export const commentVotesTable = pgTable(
     comment_id: uuid("comment_id")
       .references(() => commentsTable.id)
       .notNull(), // Corrected column name and reference
-    direction: integer("direction").notNull(), // +1 or -1
+    // direction: integer("direction").notNull(),
+    isUpvote: boolean("isUpvote").notNull().default(false),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => {
@@ -167,3 +170,10 @@ export type SelectUser = typeof usersTable.$inferSelect;
 
 export type InsertPost = typeof postsTable.$inferInsert;
 export type SelectPost = typeof postsTable.$inferSelect;
+
+export type InsertComment = typeof commentsTable.$inferInsert;
+export type SelectComment = typeof commentsTable.$inferSelect;
+// Define a type for comments when threaded, including children
+export type ThreadedComment = SelectComment & {
+  children?: ThreadedComment[]; // 'children' can be an array of other threaded comments
+};

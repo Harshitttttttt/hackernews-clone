@@ -1,0 +1,31 @@
+.main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    'voteColumn title_and_url'
+    'voteColumn bottom';
+  gap: 3px;
+  padding-bottom: 3px;
+}
+
+.voteColumn {
+  grid-area: voteColumn;
+  display: flex;
+}
+
+.upvote:hover {
+  cursor: pointer;
+}
+
+.title_and_url {
+  grid-area: title_and_url;
+  display: flex;
+  gap: 3px;
+  font-size: small;
+}
+
+.bottom {
+  grid-area: bottom;
+  font-size: smaller;
+}

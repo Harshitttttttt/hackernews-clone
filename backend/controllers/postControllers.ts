@@ -3,7 +3,11 @@ import asyncHandler from "express-async-handler";
 import { db } from "../db/db.ts";
 import { postsTable } from "../db/schema.ts";
 import { CreatePostSchema } from "../zod/schemas/post.schema.ts";
-import { createPost } from "../db/queries/postQueries.ts";
+import {
+  createPost,
+  handlePostUpvote,
+  testUpvote,
+} from "../db/queries/postQueries.ts";
 
 // @desc Fetch all main page posts
 // @route GET /api/posts/
@@ -41,11 +45,18 @@ const createANewPost: RequestHandler = asyncHandler(
         return;
       }
 
+      const creatorUsername = req.user?.username;
+      if (!creatorUsername) {
+        res.status(401).json({ message: "Not authorized" });
+        return;
+      }
+
       const newPost = {
         title: title,
         url: url,
         content: content,
         user_id: userId,
+        creator_username: creatorUsername,
       };
 
       const [post] = await createPost(newPost);
@@ -66,4 +77,27 @@ const createANewPost: RequestHandler = asyncHandler(
   }
 );
 
-export { getMainPagePosts, createANewPost };
+// @desc Upvote or Un-Upvote a post
+// @route GET /api/posts/upvote/:postId
+// @access Private
+
+const upvotePost: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    const postId = req.params.postId;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
+    try {
+      await handlePostUpvote(userId, postId);
+      res.status(200).json({ message: "Post upvoted successfully" });
+    } catch (error) {
+      console.error("Error upvoting post:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+export { getMainPagePosts, createANewPost, upvotePost };

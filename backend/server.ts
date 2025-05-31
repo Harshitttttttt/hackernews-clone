@@ -1,10 +1,12 @@
 import express from "express";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5347;
 import cookieParser from "cookie-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.ts";
 import userRoutes from "./routes/userRoutes.ts";
 import postRoutes from "./routes/postRoutes.ts";
+import commentRoutes from "../backend/routes/commentRoutes.ts";
 import { drizzle } from "drizzle-orm/neon-http";
+import cors from "cors";
 
 const databaseUrl = process.env.DATABASE_URL;
 
@@ -18,12 +20,20 @@ if (!databaseUrl) {
 const db = drizzle(databaseUrl);
 const app = express();
 
+// CORS configuration
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+};
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors(corsOptions));
 
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.get("/", (req, res) => {
   res.send("API Running");

@@ -84,9 +84,12 @@ const registerUser: RequestHandler = asyncHandler(
 
 const loginUser: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    console.log("Hitting loginUser endpoint");
     try {
       const validated = LoginUserSchema.parse(req.body);
       const { email, password } = validated;
+
+      console.log("Login attempt:", { email, password });
 
       // const findUser = await db.query.usersTable.findFirst({
       //   where: (u, { eq }) => eq(u.email, email),

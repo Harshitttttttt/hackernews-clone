@@ -1,0 +1,25 @@
+body {
+  font-family: 'Times New Roman', Times, serif;
+  margin: 8px;
+}
+
+.label_text {
+  font-weight: bold;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+button {
+  align-self: flex-start;
+  margin: 15px 0;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}

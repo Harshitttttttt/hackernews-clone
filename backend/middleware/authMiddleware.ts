@@ -10,9 +10,12 @@ const protect = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
 
-    console.log("JWT:", token);
-    const decodedRaw = jwt.decode(token);
-    console.log("Decoded (raw):", decodedRaw);
+    if (process.env.NODE_ENV === "development") {
+      console.log("Coming from the protect middleware");
+      console.log("JWT:", token);
+      const decodedRaw = jwt.decode(token);
+      console.log("Decoded (raw):", decodedRaw);
+    }
 
     if (!token) {
       res.status(401);
@@ -28,7 +31,10 @@ const protect = asyncHandler(
         where: (u, { eq }) => eq(u.id, decoded.userId),
       });
 
-      console.log(user);
+      if (process.env.NODE_ENV === "development") {
+        console.log("Coming from the protect middleware");
+        console.log(user);
+      }
 
       if (!user) {
         res.status(401);

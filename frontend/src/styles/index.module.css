@@ -1,0 +1,41 @@
+:root {
+  --primary-color: #ff6600;
+  --secondary-color: #f6f6ef;
+  --background-color: #ffffff;
+  --text-color: #000;
+  --link-color: #0000ee;
+  --visited-link-color: #551a8b;
+}
+
+.main {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
+  margin: 5px 100px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--primary-color);
+  padding: 2px 2px 2px 0;
+}
+
+a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.hn_nav_left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.login {
+  margin-right: 5px;
+}

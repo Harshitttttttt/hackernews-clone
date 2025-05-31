@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node --env-file=.env --watch --experimental-strip-types backend/server.ts",
+    "client": "pnpm --prefix frontend run dev",
     "typecheck": "tsc --watch --noEmit"
   },
   "type": "module",
@@ -16,6 +17,7 @@
     "@neondatabase/serverless": "^1.0.0",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "drizzle-orm": "^0.41.0",
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.18",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.14.0",
