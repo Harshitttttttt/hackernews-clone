@@ -5,6 +5,7 @@ import { postsTable } from "../db/schema.ts";
 import { CreatePostSchema } from "../zod/schemas/post.schema.ts";
 import {
   createPost,
+  getPost,
   handlePostUpvote,
   testUpvote,
 } from "../db/queries/postQueries.ts";
@@ -22,6 +23,25 @@ const getMainPagePosts: RequestHandler = asyncHandler(
     } catch (error) {
       console.error("Error fetching main page posts:", error);
       res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+// @desc Fetch a particular post by ID
+// @route GET /api/posts/:postId
+// @access Public
+
+const getPostById: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    console.log("Hitting getPostById endpoint");
+    console.log(req.params.postId);
+    const postId = req.params.postId;
+    try {
+      const post = await getPost(postId);
+      res.status(200).json(post[0]);
+    } catch (error) {
+      console.error("Error fetching post by ID:", error);
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 );
@@ -100,4 +120,4 @@ const upvotePost: RequestHandler = asyncHandler(
   }
 );
 
-export { getMainPagePosts, createANewPost, upvotePost };
+export { getMainPagePosts, createANewPost, upvotePost, getPostById };

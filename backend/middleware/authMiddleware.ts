@@ -10,13 +10,6 @@ const protect = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const token = req.cookies.jwt;
 
-    if (process.env.NODE_ENV === "development") {
-      console.log("Coming from the protect middleware");
-      console.log("JWT:", token);
-      const decodedRaw = jwt.decode(token);
-      console.log("Decoded (raw):", decodedRaw);
-    }
-
     if (!token) {
       res.status(401);
       throw new Error("Not authorized, no token");
@@ -30,11 +23,6 @@ const protect = asyncHandler(
       const user = await db.query.usersTable.findFirst({
         where: (u, { eq }) => eq(u.id, decoded.userId),
       });
-
-      if (process.env.NODE_ENV === "development") {
-        console.log("Coming from the protect middleware");
-        console.log(user);
-      }
 
       if (!user) {
         res.status(401);

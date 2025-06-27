@@ -4,6 +4,7 @@ import type { InsertComment, SelectUser } from "../db/schema.ts";
 import {
   createCommentOnAPost,
   getAllCommentsForAPost,
+  GetChildComment,
 } from "../db/queries/commentQueries.ts";
 import { buildCommentTree } from "../utils/commentTree.ts";
 
@@ -13,7 +14,6 @@ import { buildCommentTree } from "../utils/commentTree.ts";
 
 const createCommentOnPost: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    console.log("Hitting createCommentOnPost endpoint");
     try {
       const { postId, content, parent_comment_id } = req.body;
       const userId = req.user?.id;
@@ -26,10 +26,17 @@ const createCommentOnPost: RequestHandler = asyncHandler(
         return;
       }
 
+      const commentorUsername = req.user?.username;
+      if (!commentorUsername) {
+        res.status(401).json({ message: "Not authorized" });
+        return;
+      }
+
       const commentData: InsertComment = {
         content: content,
         post_id: postId,
         user_id: userId,
+        commentor_username: commentorUsername,
       };
 
       if (parent_comment_id) {
@@ -60,7 +67,6 @@ const createCommentOnPost: RequestHandler = asyncHandler(
 
 const getCommentsForPost: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    console.log("Hitting getCommentsForPost endpoint");
     try {
       const postId = req.params.postId;
       if (!postId) {
@@ -75,9 +81,6 @@ const getCommentsForPost: RequestHandler = asyncHandler(
 
       // 2. Transform the flat list into a threaded structure
       const threadedComments = buildCommentTree(flatComments);
-
-      console.log("Coming from getCommentsForPost in commentController.ts");
-      console.log("Threaded comments:", threadedComments);
 
       if (threadedComments) {
         res.status(201).json({
@@ -95,4 +98,33 @@ const getCommentsForPost: RequestHandler = asyncHandler(
   }
 );
 
-export { createCommentOnPost, getCommentsForPost };
+// @desc Get a comments immediate child
+// @route GET /api/comments/child/:commentId
+// @access Public
+
+const getChildComment = asyncHandler(async (req, res, next) => {
+  const commentId = req.params.commentId;
+
+  if (!commentId) {
+    res.status(400).json({
+      message: "CommentId not found",
+    });
+    return;
+  }
+
+  const childComment = await GetChildComment(commentId);
+
+  if (!childComment) {
+    res.json(400).json({
+      message: "Error fetching child comment",
+    });
+    return;
+  }
+
+  res.status(200).json({
+    message: "Child fetched successfully",
+    comment: childComment,
+  });
+});
+
+export { createCommentOnPost, getCommentsForPost, getChildComment };

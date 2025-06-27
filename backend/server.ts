@@ -16,7 +16,6 @@ if (!databaseUrl) {
   );
 }
 
-// console.log(databaseUrl);
 const db = drizzle(databaseUrl);
 const app = express();
 

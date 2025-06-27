@@ -22,7 +22,6 @@ import {
 
 const registerUser: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    console.log("Hitting registerUser endpoint");
     try {
       const validated = RegisterUserSchema.parse(req.body);
       const { username, email, password } = validated;
@@ -84,16 +83,9 @@ const registerUser: RequestHandler = asyncHandler(
 
 const loginUser: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    console.log("Hitting loginUser endpoint");
     try {
       const validated = LoginUserSchema.parse(req.body);
       const { email, password } = validated;
-
-      console.log("Login attempt:", { email, password });
-
-      // const findUser = await db.query.usersTable.findFirst({
-      //   where: (u, { eq }) => eq(u.email, email),
-      // });
 
       const findUser = await getUserByEmail(email);
 
@@ -150,14 +142,13 @@ const getUserProfile: RequestHandler = asyncHandler(
       });
     }
 
-    console.log("req.user: ", req.user);
-
-    const { id, username, email } = req.user;
+    const { id, username, email, karma } = req.user;
 
     res.status(200).json({
       id,
       username,
       email,
+      karma,
     });
   }
 );

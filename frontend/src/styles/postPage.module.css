@@ -1,0 +1,33 @@
+.main {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
+  background-color: #f6f6ef;
+  padding-top: 10px;
+}
+
+.addComment {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+}
+
+.commentBox {
+  width: auto;
+  align-self: start;
+}
+
+.addCommentButton {
+  width: auto;
+  align-self: start;
+  margin: 10px 0;
+}
+
+.commentList,
+.postContent {
+  margin-left: 15px;
+}
+
+.postContent {
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}

@@ -76,6 +76,7 @@ export const commentsTable: any = pgTable("comments", {
   user_id: uuid("user_id")
     .references(() => usersTable.id)
     .notNull(),
+  commentor_username: varchar({ length: 255 }).notNull(),
   post_id: uuid("post_id")
     .references(() => postsTable.id)
     .notNull(),
@@ -173,6 +174,7 @@ export type SelectPost = typeof postsTable.$inferSelect;
 
 export type InsertComment = typeof commentsTable.$inferInsert;
 export type SelectComment = typeof commentsTable.$inferSelect;
+
 // Define a type for comments when threaded, including children
 export type ThreadedComment = SelectComment & {
   children?: ThreadedComment[]; // 'children' can be an array of other threaded comments

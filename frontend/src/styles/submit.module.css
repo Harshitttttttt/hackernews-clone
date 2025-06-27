@@ -7,10 +7,8 @@
   --visited-link-color: #551a8b;
 }
 
-.main {
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 13px;
-  /* margin: 0 100px 5px 100px; */
+.submitPage {
+  /* margin: 5px 100px; */
 }
 
 .header {
@@ -38,4 +36,8 @@ a {
 
 .login {
   margin-right: 5px;
+}
+
+.logoutLink {
+  margin-right: 4px;
 }

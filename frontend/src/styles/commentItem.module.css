@@ -1,0 +1,42 @@
+.main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-areas:
+    'vote info'
+    '. comment'
+    '. reply';
+  gap: 3px;
+}
+
+.upvote {
+  grid-area: vote;
+}
+
+.info {
+  grid-area: info;
+}
+
+.comment {
+  grid-area: comment;
+}
+
+.replyButton {
+  grid-area: reply;
+  font-size: x-small;
+  text-decoration: underline;
+}
+
+.upvote,
+.info,
+.info span {
+  color: grey;
+  font-size: smaller;
+}
+
+.childComments {
+  margin-left: 24px; /* Indent child comments */
+  /* border-left: 1px solid gray; */
+  padding-left: 16px;
+  padding: 5px;
+}

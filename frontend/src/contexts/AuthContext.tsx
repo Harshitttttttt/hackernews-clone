@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { set } from 'zod'
@@ -6,6 +7,7 @@ interface userData {
   id: string
   username: string
   email: string
+  karma: number
 }
 
 interface AuthState {
@@ -31,14 +33,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const checkAuth = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:5347/api/users/profile', {
+      // const url = `${env.VITE_API_URL}/api/users/profile`
+      const url = '/api/users/profile'
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Ensure cookies are sent with the request
       })
 
       if (response.ok) {
+        console.log('User is authenticated, fetching profile data')
         const userData = await response.json()
         setUser(userData)
         setIsAuthenticated(true)
@@ -66,7 +72,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = async () => {
     try {
-      const response = await fetch('http://localhost:5347/api/users/logout', {
+      // const url = `${env.VITE_API_URL}/api/users/logout`
+      const url = `/api/users/logout`
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

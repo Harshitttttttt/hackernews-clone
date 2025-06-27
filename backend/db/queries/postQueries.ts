@@ -12,6 +12,15 @@ export async function getMainPagePosts() {
   }
 }
 
+export async function getPost(postId: string) {
+  try {
+    return await db.select().from(postsTable).where(eq(postsTable.id, postId));
+  } catch (error) {
+    console.error("Error fetching post by ID:", error);
+    throw new Error("Failed to fetch post");
+  }
+}
+
 export async function createPost(postData: InsertPost) {
   try {
     const result = await db.insert(postsTable).values(postData).returning();

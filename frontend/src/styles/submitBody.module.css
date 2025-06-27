@@ -1,0 +1,63 @@
+.main {
+  background-color: #f6f6ef;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto auto auto auto;
+  grid-template-areas:
+    'title_span title'
+    'url_span url'
+    'text_span textarea'
+    'submit_span submit'
+    '. discuss';
+  align-items: center;
+  gap: 3px;
+
+  margin: 0 5px;
+  max-width: 400px;
+}
+
+.title_span {
+  grid-area: title_span;
+}
+
+.url_span {
+  grid-area: url_span;
+}
+
+.text_span {
+  grid-area: text_span;
+}
+
+.title_input {
+  grid-area: title;
+}
+
+.url_input {
+  grid-area: url;
+}
+
+.text_input {
+  grid-area: textarea;
+}
+
+.submit_span {
+  grid-area: submit_span;
+}
+
+.submit {
+  grid-area: submit;
+  width: auto;
+  justify-self: start;
+}
+
+p {
+  grid-area: discuss;
+  margin: 0 5px;
+}

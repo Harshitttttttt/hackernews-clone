@@ -11,6 +11,8 @@ interface PostItemProps {
   username: string
   time: string // Time in hours ago, so a number
   no_of_comments: number // Number of comments, so a number
+  postId: string
+  expanded: boolean
 }
 
 export default function PostItem({
@@ -21,6 +23,8 @@ export default function PostItem({
   username,
   time,
   no_of_comments,
+  postId,
+  expanded,
 }: PostItemProps) {
   let displayUrl: string
   try {
@@ -40,18 +44,31 @@ export default function PostItem({
 
   const formattedTimeAgo = formatTimeAgo(time)
 
+  const handleFavourite = () => {
+    console.log('Favouriting')
+  }
+
   return (
     <div className={styles.main}>
-      {/* <div className={styles.top}> */}
       <div className={styles.voteColumn}>
-        <span className={styles.rank}>{rank}.</span>
+        {rank === 0 ? <></> : <span className={styles.rank}>{rank}.</span>}
         <span className={styles.upvote}>▲</span>
       </div>
       <div className={styles.title_and_url}>
-        <span className={styles.title}>{title}</span>
-        <span className={styles.url}>{'(' + displayUrl + ')'}</span>
+        {displayUrl ? (
+          <Link to={url} className={styles.title}>
+            {title}
+          </Link>
+        ) : (
+          <Link to={url} className={styles.title}>
+            Ask HN: {title}
+          </Link>
+        )}
+
+        {displayUrl && (
+          <span className={styles.url}>{'(' + displayUrl + ')'}</span>
+        )}
       </div>
-      {/* </div> */}
       <div className={styles.bottom}>
         <Link className={styles.point_user}>
           {points + ' points by ' + username}
@@ -60,7 +77,19 @@ export default function PostItem({
         {' | '}
         <Link>hide</Link>
         {' | '}
-        <Link>{no_of_comments + ' comments'}</Link>
+        {expanded ? (
+          <>
+            <span className={styles.favourite} onClick={handleFavourite}>
+              favourite
+            </span>
+            {' | '}
+          </>
+        ) : (
+          <></>
+        )}
+        <Link to="/post/$postId" params={{ postId: postId }}>
+          {no_of_comments + ' comments'}
+        </Link>
       </div>
     </div>
   )

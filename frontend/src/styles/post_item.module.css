@@ -25,7 +25,26 @@
   font-size: small;
 }
 
-.bottom {
+.url {
+  font-size: small;
+}
+
+.bottom,
+.bottom a {
   grid-area: bottom;
-  font-size: smaller;
+  font-size: small;
+  color: gray;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.title_and_url > .title {
+  text-decoration: none;
+}
+
+.favourite:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }

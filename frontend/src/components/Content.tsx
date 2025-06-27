@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import styles from '../styles/content.module.css'
 import PostItem from './PostItem'
+import { env } from '../env'
 
 interface Post {
   id: string
@@ -18,11 +19,15 @@ interface Post {
 
 export default function Content() {
   const [posts, setPosts] = useState<Post[]>([])
+  const [loading, setLoading] = useState(true) // State to indicate loading status
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost:5347/api/posts', {
+        // const url = `${env.VITE_API_URL}/api/posts`
+        const url = `/api/posts`
+        const response = await fetch(url, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -37,11 +42,26 @@ export default function Content() {
           setPosts(data)
         }
       } catch (error) {
-        console.error('Error fetching posts:', error)
+        if (error instanceof Error) {
+          setError(error.message) // Set error message
+        } else {
+          setError('An unknown error occurred while fetching content.')
+          console.error('Unknown content fetch error:', error)
+        }
+      } finally {
+        setLoading(false)
       }
     }
     fetchPosts()
   }, [])
+
+  if (loading) {
+    return <div className={styles.loadingMessage}>Loading content...</div>
+  }
+
+  if (error) {
+    return <div className={styles.errorMessage}>Error: {error}</div>
+  }
 
   return (
     <div className={styles.main}>
@@ -55,6 +75,8 @@ export default function Content() {
           points={post.score}
           time={post.createdAt}
           username={post.creator_username}
+          postId={post.id}
+          expanded={false}
         />
       ))}
     </div>

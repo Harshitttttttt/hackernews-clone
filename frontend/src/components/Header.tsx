@@ -7,10 +7,13 @@ export default function Header() {
   const navigate = useNavigate()
   const { isAuthenticated: isLoggedIn, user, logout } = useAuth()
 
-  const handleLogout = async (event) => {
+  const handleLogout = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     await logout()
   }
+
+  const username = user?.username
+  const karma = user?.karma
 
   return (
     <header className="p-2 flex gap-2 bg-white text-black justify-between">
@@ -25,7 +28,7 @@ export default function Header() {
               }}
             />
           </Link>
-          <Link to="/news" className={styles.title}>
+          <Link to="/" className={styles.title}>
             Hacker News
           </Link>
           <Link to="/newest">new</Link>
@@ -46,12 +49,12 @@ export default function Header() {
           ) : (
             <>
               <Link to="/user-profile" className={styles.usernameLink}>
-                {user?.username}
+                {username + ' ' + `(${karma})`}
               </Link>
               {' | '}
-              <Link to="#" onClick={handleLogout} className={styles.logoutLink}>
+              <span onClick={handleLogout} className={styles.logoutLink}>
                 logout
-              </Link>
+              </span>
             </>
           )}
         </div>

@@ -31,3 +31,17 @@ export async function getAllCommentsForAPost(
     throw new Error("Failed to fetch comments");
   }
 }
+
+export async function GetChildComment(
+  commentId: string
+): Promise<SelectComment[]> {
+  try {
+    return await db
+      .select()
+      .from(commentsTable)
+      .where(eq(commentsTable.parent_comment_id, commentId));
+  } catch (error) {
+    console.error("Error fetching child comment :(");
+    throw error;
+  }
+}

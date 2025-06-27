@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import styles from '../styles/login.module.css'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import { env } from '@/env'
 
 export const Route = createFileRoute('/login')({
   component: RouteComponent,
@@ -40,12 +41,8 @@ function RouteComponent() {
       return
     }
 
-    console.log('Login Attempt: ', {
-      email: loginEmail,
-      password: loginPassword,
-    })
-
-    const url = 'http://localhost:5347/api/users/login'
+    // const url = `${env.VITE_API_URL}/api/users/login`
+    const url = `/api/users/login`
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -83,8 +80,6 @@ function RouteComponent() {
       }
 
       const json = await response.json()
-      console.log(json)
-      console.log(json.user)
 
       if (json.user) {
         authLogin(json.user)
@@ -108,12 +103,6 @@ function RouteComponent() {
     event.preventDefault()
     setRegisterError('')
 
-    console.log('Register Attempt: ', {
-      username: username,
-      email: registerEmail,
-      password: registerPassword,
-    })
-
     // Client-side validation for registration
     if (!username || !registerEmail || !registerPassword) {
       setRegisterError('All fields are required.')
@@ -136,7 +125,9 @@ function RouteComponent() {
       return
     }
 
-    const url = 'http://localhost:5347/api/users/register'
+    // const url = `${env.VITE_API_URL}/api/users/register`
+    const url = `/api/users/register`
+
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -172,7 +163,6 @@ function RouteComponent() {
       }
 
       const json = await response.json()
-      console.log(json)
       setUsername('')
       setRegisterEmail('')
       setRegisterPassword('')
