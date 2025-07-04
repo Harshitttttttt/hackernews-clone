@@ -15,6 +15,7 @@ import { Route as SubmitImport } from './routes/submit'
 import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
 import { Route as PostPostIdImport } from './routes/post.$postId'
+import { Route as ReplyPostIdParentCommentIdImport } from './routes/reply.$postId.$parentCommentId'
 
 // Create/Update Routes
 
@@ -41,6 +42,14 @@ const PostPostIdRoute = PostPostIdImport.update({
   path: '/post/$postId',
   getParentRoute: () => rootRoute,
 } as any)
+
+const ReplyPostIdParentCommentIdRoute = ReplyPostIdParentCommentIdImport.update(
+  {
+    id: '/reply/$postId/$parentCommentId',
+    path: '/reply/$postId/$parentCommentId',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -74,6 +83,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostPostIdImport
       parentRoute: typeof rootRoute
     }
+    '/reply/$postId/$parentCommentId': {
+      id: '/reply/$postId/$parentCommentId'
+      path: '/reply/$postId/$parentCommentId'
+      fullPath: '/reply/$postId/$parentCommentId'
+      preLoaderRoute: typeof ReplyPostIdParentCommentIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -84,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/submit': typeof SubmitRoute
   '/post/$postId': typeof PostPostIdRoute
+  '/reply/$postId/$parentCommentId': typeof ReplyPostIdParentCommentIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -91,6 +108,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/submit': typeof SubmitRoute
   '/post/$postId': typeof PostPostIdRoute
+  '/reply/$postId/$parentCommentId': typeof ReplyPostIdParentCommentIdRoute
 }
 
 export interface FileRoutesById {
@@ -99,14 +117,31 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/submit': typeof SubmitRoute
   '/post/$postId': typeof PostPostIdRoute
+  '/reply/$postId/$parentCommentId': typeof ReplyPostIdParentCommentIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/submit' | '/post/$postId'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/submit'
+    | '/post/$postId'
+    | '/reply/$postId/$parentCommentId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/submit' | '/post/$postId'
-  id: '__root__' | '/' | '/login' | '/submit' | '/post/$postId'
+  to:
+    | '/'
+    | '/login'
+    | '/submit'
+    | '/post/$postId'
+    | '/reply/$postId/$parentCommentId'
+  id:
+    | '__root__'
+    | '/'
+    | '/login'
+    | '/submit'
+    | '/post/$postId'
+    | '/reply/$postId/$parentCommentId'
   fileRoutesById: FileRoutesById
 }
 
@@ -115,6 +150,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SubmitRoute: typeof SubmitRoute
   PostPostIdRoute: typeof PostPostIdRoute
+  ReplyPostIdParentCommentIdRoute: typeof ReplyPostIdParentCommentIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -122,6 +158,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SubmitRoute: SubmitRoute,
   PostPostIdRoute: PostPostIdRoute,
+  ReplyPostIdParentCommentIdRoute: ReplyPostIdParentCommentIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -137,7 +174,8 @@ export const routeTree = rootRoute
         "/",
         "/login",
         "/submit",
-        "/post/$postId"
+        "/post/$postId",
+        "/reply/$postId/$parentCommentId"
       ]
     },
     "/": {
@@ -151,6 +189,9 @@ export const routeTree = rootRoute
     },
     "/post/$postId": {
       "filePath": "post.$postId.tsx"
+    },
+    "/reply/$postId/$parentCommentId": {
+      "filePath": "reply.$postId.$parentCommentId.tsx"
     }
   }
 }

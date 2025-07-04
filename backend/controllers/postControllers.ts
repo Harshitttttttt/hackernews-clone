@@ -16,7 +16,6 @@ import {
 
 const getMainPagePosts: RequestHandler = asyncHandler(
   async (req, res, next) => {
-    console.log("Hitting getMainPagePosts endpoint");
     const posts = await db.select().from(postsTable);
     res.status(200).json(posts);
     try {
@@ -33,8 +32,6 @@ const getMainPagePosts: RequestHandler = asyncHandler(
 
 const getPostById: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    console.log("Hitting getPostById endpoint");
-    console.log(req.params.postId);
     const postId = req.params.postId;
     try {
       const post = await getPost(postId);
@@ -52,13 +49,11 @@ const getPostById: RequestHandler = asyncHandler(
 
 const createANewPost: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-    console.log("Hitting createANewPost endpoint");
     try {
       const validated = CreatePostSchema.parse(req.body);
       const { title, url, content } = validated;
 
       const userId = req.user?.id;
-      console.log("User ID from request:", userId);
 
       if (!userId) {
         res.status(401).json({ message: "Not authorized" });

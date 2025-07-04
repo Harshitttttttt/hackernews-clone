@@ -45,3 +45,17 @@ export async function GetChildComment(
     throw error;
   }
 }
+
+export async function GetCommentById(
+  commentId: string
+): Promise<SelectComment[]> {
+  try {
+    return await db
+      .select()
+      .from(commentsTable)
+      .where(eq(commentsTable.id, commentId));
+  } catch (error) {
+    console.error("Error fetching comment");
+    throw error;
+  }
+}

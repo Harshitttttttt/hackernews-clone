@@ -5,6 +5,7 @@ import {
   createCommentOnAPost,
   getAllCommentsForAPost,
   GetChildComment,
+  GetCommentById,
 } from "../db/queries/commentQueries.ts";
 import { buildCommentTree } from "../utils/commentTree.ts";
 
@@ -127,4 +128,32 @@ const getChildComment = asyncHandler(async (req, res, next) => {
   });
 });
 
-export { createCommentOnPost, getCommentsForPost, getChildComment };
+// @desc Get a comment by its Id
+// @route GET /api/comments/:commentId
+// @access Private
+
+const getCommentById = asyncHandler(async (req, res, next) => {
+  const commentId = req.params.commentId;
+
+  if (!commentId) {
+    res.status(400).json({
+      message: "Error fetching the comment",
+    });
+  }
+
+  const comment = await GetCommentById(commentId);
+  if (!comment) {
+    res.status(400).json({
+      message: "Error fetching the comment from DB",
+    });
+  }
+
+  res.status(200).json(comment);
+});
+
+export {
+  createCommentOnPost,
+  getCommentsForPost,
+  getChildComment,
+  getCommentById,
+};

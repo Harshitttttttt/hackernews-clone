@@ -1,18 +1,18 @@
-import { Link } from '@tanstack/react-router'
-import styles from '../styles/post_item.module.css'
-import type { ZodString } from 'zod'
-import { formatTimeAgo } from '@/utils/timeFormatter'
+import { Link } from '@tanstack/react-router';
+import styles from '../styles/post_item.module.css';
+import type { ZodString } from 'zod';
+import { formatTimeAgo } from '@/utils/timeFormatter';
 
 interface PostItemProps {
-  rank: number // Rank is typically a number
-  title: string
-  url: string
-  points: number // Points would be a number
-  username: string
-  time: string // Time in hours ago, so a number
-  no_of_comments: number // Number of comments, so a number
-  postId: string
-  expanded: boolean
+  rank: number; // Rank is typically a number
+  title: string;
+  url: string;
+  points: number; // Points would be a number
+  username: string;
+  time: string; // Time in hours ago, so a number
+  no_of_comments: number; // Number of comments, so a number
+  postId: string;
+  expanded: boolean;
 }
 
 export default function PostItem({
@@ -26,27 +26,27 @@ export default function PostItem({
   postId,
   expanded,
 }: PostItemProps) {
-  let displayUrl: string
+  let displayUrl: string;
   try {
-    let safeUrl = url
+    let safeUrl = url;
     if (
       safeUrl &&
       !safeUrl.startsWith('http://') &&
       !safeUrl.startsWith('https://')
     ) {
-      safeUrl = 'http://' + safeUrl
+      safeUrl = 'http://' + safeUrl;
     }
-    displayUrl = safeUrl ? new URL(safeUrl).hostname.replace('www.', '') : ''
+    displayUrl = safeUrl ? new URL(safeUrl).hostname.replace('www.', '') : '';
   } catch (error) {
-    console.error('Error parsing URL:', url, error)
-    displayUrl = url
+    console.error('Error parsing URL:', url, error);
+    displayUrl = url;
   }
 
-  const formattedTimeAgo = formatTimeAgo(time)
+  const formattedTimeAgo = formatTimeAgo(time);
 
   const handleFavourite = () => {
-    console.log('Favouriting')
-  }
+    console.log('Favouriting');
+  };
 
   return (
     <div className={styles.main}>
@@ -92,5 +92,5 @@ export default function PostItem({
         </Link>
       </div>
     </div>
-  )
+  );
 }

@@ -1,0 +1,55 @@
+.main {
+  display: flex;
+  flex-direction: row;
+  background-color: #f6f6ef;
+  padding-top: 10px;
+  gap: 5px;
+  padding-left: 5px;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  font-size: small;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input,
+.replyButton {
+  align-self: start;
+}
+
+.info a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.mainComment {
+  white-space: pre-wrap;
+}
+
+.upvoteButton {
+  font-size: small;
+}
+
+.upvoteButton:hover {
+  cursor: pointer;
+}
+
+.upvoteButton,
+.info {
+  color: gray;
+}
+
+.info a {
+  color: grey;
+}
+
+.replyButton {
+  margin: 5px 0;
+}

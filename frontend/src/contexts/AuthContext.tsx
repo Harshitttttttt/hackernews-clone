@@ -1,98 +1,98 @@
-import { env } from '@/env'
-import React, { createContext, useContext, useState, useEffect } from 'react'
-import type { ReactNode } from 'react'
-import { set } from 'zod'
+import { env } from '@/env';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { set } from 'zod';
 
 interface userData {
-  id: string
-  username: string
-  email: string
-  karma: number
+  id: string;
+  username: string;
+  email: string;
+  karma: number;
 }
 
 interface AuthState {
-  isAuthenticated: boolean
-  user: userData | null
-  loading: boolean
-  login: (userData: userData) => void
-  logout: () => Promise<void>
-  checkAuth: () => Promise<void>
+  isAuthenticated: boolean;
+  user: userData | null;
+  loading: boolean;
+  login: (userData: userData) => void;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthState | undefined>(undefined)
+const AuthContext = createContext<AuthState | undefined>(undefined);
 
 interface AuthProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
-  const [user, setUser] = useState<userData | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<userData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const checkAuth = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       // const url = `${env.VITE_API_URL}/api/users/profile`
-      const url = '/api/users/profile'
+      const url = '/api/users/profile';
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include', // Ensure cookies are sent with the request
-      })
+      });
 
       if (response.ok) {
-        console.log('User is authenticated, fetching profile data')
-        const userData = await response.json()
-        setUser(userData)
-        setIsAuthenticated(true)
+        console.log('User is authenticated, fetching profile data');
+        const userData = await response.json();
+        setUser(userData);
+        setIsAuthenticated(true);
       } else {
-        setUser(null)
-        setIsAuthenticated(false)
+        setUser(null);
+        setIsAuthenticated(false);
       }
     } catch (error) {
-      console.error('Error during initial auth check:', error)
-      setUser(null)
-      setIsAuthenticated(false)
+      console.error('Error during initial auth check:', error);
+      setUser(null);
+      setIsAuthenticated(false);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    checkAuth()
-  }, [])
+    checkAuth();
+  }, []);
 
   const login = (userData: userData) => {
-    setIsAuthenticated(true)
-    setUser(userData)
-  }
+    setIsAuthenticated(true);
+    setUser(userData);
+  };
 
   const logout = async () => {
     try {
       // const url = `${env.VITE_API_URL}/api/users/logout`
-      const url = `/api/users/logout`
+      const url = `/api/users/logout`;
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-      })
+      });
 
       if (response.ok) {
-        console.log('User logged out successfully')
+        console.log('User logged out successfully');
       } else {
-        console.log('Backend logout failed', await response.text())
+        console.log('Backend logout failed', await response.text());
       }
     } catch (error) {
-      console.error('Error during logout: ', error)
+      console.error('Error during logout: ', error);
     } finally {
-      setIsAuthenticated(false)
-      setUser(null)
+      setIsAuthenticated(false);
+      setUser(null);
     }
-  }
+  };
 
   const contextValue: AuthState = {
     isAuthenticated,
@@ -101,17 +101,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login, // This `login` now just updates the frontend state
     logout, // This `logout` sends a request to clear the cookie
     checkAuth, // Expose checkAuth for manual re-checks if needed (e.g., after certain actions)
-  }
+  };
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  )
-}
+  );
+};
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context
-}
+  return context;
+};

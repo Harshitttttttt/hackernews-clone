@@ -1,48 +1,48 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import styles from '../styles/login.module.css'
-import { useEffect, useState } from 'react'
-import { useAuth } from '../contexts/AuthContext'
-import { env } from '@/env'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import styles from '../styles/login.module.css';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { env } from '@/env';
 
 export const Route = createFileRoute('/login')({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // Get login, isAuthenticated, loading, AND checkAuth from useAuth
-  const { login: authLogin, isAuthenticated, loading, checkAuth } = useAuth()
+  const { login: authLogin, isAuthenticated, loading, checkAuth } = useAuth();
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
-      console.log('User already logged in, redirecting to home.')
-      navigate({ to: '/' })
+      console.log('User already logged in, redirecting to home.');
+      navigate({ to: '/' });
     }
-  }, [loading, isAuthenticated, navigate])
+  }, [loading, isAuthenticated, navigate]);
 
   // Login States
-  const [loginEmail, setLoginEmail] = useState('')
-  const [loginPassword, setLoginPassword] = useState('')
-  const [loginError, setLoginError] = useState('')
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   // Register States
-  const [registerEmail, setRegisterEmail] = useState('')
-  const [registerPassword, setRegisterPassword] = useState('')
-  const [username, setUsername] = useState('')
-  const [registerError, setRegisterError] = useState('')
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [registerError, setRegisterError] = useState('');
 
   const handleLoginSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setLoginError('')
+    event.preventDefault();
+    setLoginError('');
 
     // Client-side validation for login
     if (!loginEmail || !loginPassword) {
-      setLoginError('Email and password are required.')
-      return
+      setLoginError('Email and password are required.');
+      return;
     }
 
     // const url = `${env.VITE_API_URL}/api/users/login`
-    const url = `/api/users/login`
+    const url = `/api/users/login`;
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -53,15 +53,15 @@ function RouteComponent() {
           email: loginEmail,
           password: loginPassword,
         }),
-      })
+      });
 
       if (!response.ok) {
-        let errorMessage = `Login failed (Status: ${response.status})`
+        let errorMessage = `Login failed (Status: ${response.status})`;
         try {
-          const errorData = await response.json()
-          console.log(errorData)
+          const errorData = await response.json();
+          console.log(errorData);
           if (errorData.message) {
-            errorMessage = errorData.message // Use backend's specific error message
+            errorMessage = errorData.message; // Use backend's specific error message
           } else if (
             errorData.errors &&
             Array.isArray(errorData.errors) &&
@@ -70,63 +70,65 @@ function RouteComponent() {
             // For validation errors often returned as an array of errors
             errorMessage = errorData.errors
               .map((err: any) => err.msg || err.message)
-              .join(', ')
+              .join(', ');
           }
         } catch (jsonError) {
           // If response is not JSON, use generic message
-          console.error('Failed to parse error response:', jsonError)
+          console.error('Failed to parse error response:', jsonError);
         }
-        throw new Error(errorMessage)
+        throw new Error(errorMessage);
       }
 
-      const json = await response.json()
+      const json = await response.json();
 
       if (json.user) {
-        authLogin(json.user)
+        authLogin(json.user);
       } else {
-        throw new Error('Login successful, but no user data sent from backend.')
+        throw new Error(
+          'Login successful, but no user data sent from backend.',
+        );
       }
 
-      navigate({ to: '/' })
+      navigate({ to: '/' });
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message)
-        setLoginError(error.message)
+        console.error(error.message);
+        setLoginError(error.message);
       } else {
-        setLoginError('An unknown error occurred during login.')
-        console.error('An unknown error occurred during login:', error)
+        setLoginError('An unknown error occurred during login.');
+        console.error('An unknown error occurred during login:', error);
       }
     }
-  }
+  };
 
   const handleRegisterSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setRegisterError('')
+    event.preventDefault();
+    setRegisterError('');
 
     // Client-side validation for registration
     if (!username || !registerEmail || !registerPassword) {
-      setRegisterError('All fields are required.')
-      return
+      setRegisterError('All fields are required.');
+      return;
     }
 
     if (username.length <= 3) {
-      setRegisterError('Username must be greater than 3 characters.')
-      return
+      setRegisterError('Username must be greater than 3 characters.');
+      return;
     }
 
     if (registerPassword.length <= 8) {
-      setRegisterError('Password must be greater than 8 characters.')
-      return
+      setRegisterError('Password must be greater than 8 characters.');
+      return;
     }
 
     // Basic email format validation (can be more robust)
     if (!/\S+@\S+\.\S+/.test(registerEmail)) {
-      setRegisterError('Please enter a valid email address.')
-      return
+      setRegisterError('Please enter a valid email address.');
+      return;
     }
 
     // const url = `${env.VITE_API_URL}/api/users/register`
-    const url = `/api/users/register`
+    const url = `/api/users/register`;
 
     try {
       const response = await fetch(url, {
@@ -139,13 +141,13 @@ function RouteComponent() {
           email: registerEmail,
           password: registerPassword,
         }),
-      })
+      });
       if (!response.ok) {
-        let errorMessage = `Registration failed (Status: ${response.status})`
+        let errorMessage = `Registration failed (Status: ${response.status})`;
         try {
-          const errorData = await response.json()
+          const errorData = await response.json();
           if (errorData.message) {
-            errorMessage = errorData.message // Use backend's specific error message
+            errorMessage = errorData.message; // Use backend's specific error message
           } else if (
             errorData.errors &&
             Array.isArray(errorData.errors) &&
@@ -154,31 +156,31 @@ function RouteComponent() {
             // For validation errors often returned as an array of errors
             errorMessage = errorData.errors
               .map((err: any) => err.msg || err.message)
-              .join(', ')
+              .join(', ');
           }
         } catch (jsonError) {
-          console.error('Failed to parse error response:', jsonError)
+          console.error('Failed to parse error response:', jsonError);
         }
-        throw new Error(errorMessage)
+        throw new Error(errorMessage);
       }
 
-      const json = await response.json()
-      setUsername('')
-      setRegisterEmail('')
-      setRegisterPassword('')
+      const json = await response.json();
+      setUsername('');
+      setRegisterEmail('');
+      setRegisterPassword('');
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Registration Error:', error.message)
-        setRegisterError(error.message) // Display error to the user
+        console.error('Registration Error:', error.message);
+        setRegisterError(error.message); // Display error to the user
       } else {
-        setRegisterError('An unknown error occurred during registration.')
-        console.error('An unknown error occurred during registration:', error)
+        setRegisterError('An unknown error occurred during registration.');
+        console.error('An unknown error occurred during registration:', error);
       }
     }
-  }
+  };
 
   if (loading || isAuthenticated) {
-    return null
+    return null;
   }
 
   return (
@@ -244,5 +246,5 @@ function RouteComponent() {
         <button type="submit">create account</button>
       </form>
     </div>
-  )
+  );
 }

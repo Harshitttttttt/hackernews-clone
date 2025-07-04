@@ -1,10 +1,10 @@
-import { defineConfig } from 'vite'
-import viteReact from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import svgr from 'vite-plugin-svgr'
+import { defineConfig } from 'vite';
+import viteReact from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import svgr from 'vite-plugin-svgr';
 
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
-import { resolve } from 'node:path'
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
+import { resolve } from 'node:path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -35,4 +35,4 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-})
+});

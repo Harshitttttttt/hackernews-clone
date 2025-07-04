@@ -1,19 +1,18 @@
-import { Link, useNavigate } from '@tanstack/react-router'
-import styles from '../styles/header.module.css'
-import HackerNewsIcon from '../assets/y18.svg?react'
-import { useAuth } from '../contexts/AuthContext'
+import { Link, useNavigate } from '@tanstack/react-router';
+import styles from '../styles/header.module.css';
+import HackerNewsIcon from '../assets/y18.svg?react';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Header() {
-  const navigate = useNavigate()
-  const { isAuthenticated: isLoggedIn, user, logout } = useAuth()
+  const { isAuthenticated: isLoggedIn, user, logout } = useAuth();
 
   const handleLogout = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    await logout()
-  }
+    event.preventDefault();
+    await logout();
+  };
 
-  const username = user?.username
-  const karma = user?.karma
+  const username = user?.username;
+  const karma = user?.karma;
 
   return (
     <header className="p-2 flex gap-2 bg-white text-black justify-between">
@@ -60,5 +59,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }

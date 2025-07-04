@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import styles from '../styles/submitBody.module.css'
-import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react';
+import styles from '../styles/submitBody.module.css';
+import { useNavigate } from '@tanstack/react-router';
 
 export default function SubmitBody() {
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
-  const [text, setText] = useState('')
-  const navigate = useNavigate()
+  const [title, setTitle] = useState('');
+  const [url, setUrl] = useState('');
+  const [text, setText] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
+    event.preventDefault();
     try {
       const postData = {
         title: title,
         url: url,
         content: text,
-      }
-      console.log('Post Data', postData)
-      const reqUrl = '/api/posts/create'
+      };
+      console.log('Post Data', postData);
+      const reqUrl = '/api/posts/create';
       const response = await fetch(reqUrl, {
         method: 'POST',
         headers: {
@@ -25,24 +25,24 @@ export default function SubmitBody() {
         },
         body: JSON.stringify(postData),
         credentials: 'include', // Ensure cookies are sent with the request
-      })
+      });
 
       if (!response.ok) {
-        const errorText = await response.text()
-        console.error('Error creating post:', errorText)
-        throw new Error(`Failed to create post: ${errorText}`)
+        const errorText = await response.text();
+        console.error('Error creating post:', errorText);
+        throw new Error(`Failed to create post: ${errorText}`);
       }
 
-      const json = await response.json()
-      console.log(json)
+      const json = await response.json();
+      console.log(json);
 
-      navigate({ to: '/' })
+      navigate({ to: '/' });
     } catch (error) {
-      console.error('Error during post submission:', error)
+      console.error('Error during post submission:', error);
       // Optionally, you can set an error state to display to the user
-      alert('Failed to submit post. Please try again later.')
+      alert('Failed to submit post. Please try again later.');
     }
-  }
+  };
 
   return (
     <div className={styles.main}>
@@ -53,7 +53,7 @@ export default function SubmitBody() {
           className={styles.title_input}
           value={title}
           onChange={(e) => {
-            setTitle(e.target.value)
+            setTitle(e.target.value);
           }}
         />
         <span className={styles.url_span}>url: </span>
@@ -62,7 +62,7 @@ export default function SubmitBody() {
           className={styles.url_input}
           value={url}
           onChange={(e) => {
-            setUrl(e.target.value)
+            setUrl(e.target.value);
           }}
         />
         <span className={styles.text_span}>text: </span>
@@ -72,7 +72,7 @@ export default function SubmitBody() {
           className={styles.text_input}
           value={text}
           onChange={(e) => {
-            setText(e.target.value)
+            setText(e.target.value);
           }}
         />
         <span className={styles.submit_span}></span>
@@ -86,5 +86,5 @@ export default function SubmitBody() {
         optional.
       </p>
     </div>
-  )
+  );
 }

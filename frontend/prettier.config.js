@@ -9,6 +9,6 @@ const config = {
   arrowParens: 'always',
   bracketSameLine: false,
   jsxSingleQuote: false,
-}
+};
 
-export default config
+export default config;
